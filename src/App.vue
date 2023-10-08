@@ -68,7 +68,21 @@ export default defineComponent({
 }
 
 #main-page {
-  width: 21cm;
-  height: 29.7cm;
+  width: 210mm;
+  height: 296mm;
+}
+
+@media print {
+  @page {
+    margin: 0 0 !important;
+  }
+
+  #main-page.shadow-lg {
+    box-shadow: none !important;
+  }
+
+  #main-page.rounded {
+    border-radius: unset !important;
+  }
 }
 </style>
