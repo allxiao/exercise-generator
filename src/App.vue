@@ -53,7 +53,7 @@ import { Operations } from '@/utils'
 import NavItem from '@/components/NavItem.vue'
 import ExerciseGrid from '@/components/ExerciseGrid.vue'
 
-function safeParseInt (value: any): number | undefined {
+function safeParseInt (value: string): number | undefined {
   try {
     return parseInt(value)
   } catch {
@@ -81,10 +81,10 @@ export default defineComponent({
     ])
   },
   methods: {
-    updateMin (e: any) {
+    updateMin (e: { target: {value: string} }) {
       this.$store.commit(MIN, safeParseInt(e.target.value))
     },
-    updateMax (e: any) {
+    updateMax (e: { target: {value: string} }) {
       this.$store.commit(MAX, safeParseInt(e.target.value))
     },
     shuffle () {
