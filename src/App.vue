@@ -28,7 +28,16 @@
   </nav>
   <div class="container-fluid d-flex align-items-center justify-content-center">
     <div id="main-page" class="shadow-lg rounded">
-      <PlusExercise title="填空练习题"></PlusExercise>
+      <div class="container">
+        <h2 class="text-center m-4">{{ operationName }}练习题</h2>
+        <div id="student-info" class="row mt-4 mb-4 ms-1 me-1">
+          <div class="col-2">姓名：</div>
+          <div class="col-6"></div>
+          <div class="col-4 text-end">&emsp;&emsp;年&emsp;&emsp;月&emsp;&emsp;日</div>
+        </div>
+        <ExerciseGrid></ExerciseGrid>
+      </div>
+
     </div>
   </div>
 </template>
@@ -37,12 +46,12 @@
 import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { MAX, MIN, SHUFFLE } from '@/store/mutations'
 import { Operations } from '@/utils'
 
 import NavItem from '@/components/NavItem.vue'
-import PlusExercise from '@/components/PlusExercise.vue'
+import ExerciseGrid from '@/components/ExerciseGrid.vue'
 
 function safeParseInt (value: any): number | undefined {
   try {
@@ -55,17 +64,22 @@ export default defineComponent({
   name: 'App',
   components: {
     NavItem,
-    PlusExercise
+    ExerciseGrid
   },
   data () {
     return {
       operations: Object.keys(Operations)
     }
   },
-  computed: mapState([
-    'min',
-    'max'
-  ]),
+  computed: {
+    ...mapState([
+      'min',
+      'max'
+    ]),
+    ...mapGetters([
+      'operationName'
+    ])
+  },
   methods: {
     updateMin (e: any) {
       this.$store.commit(MIN, safeParseInt(e.target.value))
@@ -102,6 +116,10 @@ export default defineComponent({
 
 #config button {
   width: 8em;
+}
+
+#student-info {
+  border-bottom: 1px solid #e4803e;
 }
 
 @media print {
