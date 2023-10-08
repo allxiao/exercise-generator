@@ -8,18 +8,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">加法</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">减法</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">乘法</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">除法</a>
-          </li>
+          <NavItem v-for="op in operations" :op="op" :key="op"/>
         </ul>
         <form class="d-flex" role="form" id="config">
           <div class="input-group">
@@ -48,10 +37,12 @@
 import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
-import PlusExercise from '@/components/PlusExercise.vue'
 import { mapState } from 'vuex'
-import { MAX, MIN, OPERATION, SHUFFLE } from '@/store/mutations'
+import { MAX, MIN, SHUFFLE } from '@/store/mutations'
 import { Operations } from '@/utils'
+
+import NavItem from '@/components/NavItem.vue'
+import PlusExercise from '@/components/PlusExercise.vue'
 
 function safeParseInt (value: any): number | undefined {
   try {
@@ -63,7 +54,13 @@ function safeParseInt (value: any): number | undefined {
 export default defineComponent({
   name: 'App',
   components: {
+    NavItem,
     PlusExercise
+  },
+  data () {
+    return {
+      operations: Object.keys(Operations)
+    }
   },
   computed: mapState([
     'min',
@@ -75,9 +72,6 @@ export default defineComponent({
     },
     updateMax (e: any) {
       this.$store.commit(MAX, safeParseInt(e.target.value))
-    },
-    updateOperation (e: any) {
-      this.$store.commit(OPERATION, Operations[e.target.value as keyof typeof Operations])
     },
     shuffle () {
       this.$store.commit(SHUFFLE)

@@ -1,6 +1,6 @@
 export enum Operations {
-  Plus = 1,
-  Minus,
-  Multiply,
-  Divide
+  Plus = '加法',
+  Minus = '减法',
+  Multiply = '乘法',
+  Divide = '除法'
 }

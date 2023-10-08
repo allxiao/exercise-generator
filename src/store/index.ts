@@ -50,6 +50,11 @@ export default createStore<State>({
       numberSeries: permute(1, 20)
     }
   },
+  getters: {
+    operationName (state): string {
+      return state.operation as string
+    }
+  },
   mutations: {
     [MIN] (state, n: number) {
       if (state.min !== n) {
