@@ -2,6 +2,7 @@
 import { defineComponent } from 'vue'
 
 import SingleQuestion from '@/components/SingleQuestion.vue'
+import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'PlusExercise',
@@ -11,9 +12,14 @@ export default defineComponent({
       type: Array
     }
   },
-  data () {
-    return {
-      typedPairs: this.pairs as Array<Array<number>>
+  computed: {
+    ...mapState([
+      'resultMin',
+      'resultMax'
+    ]),
+    tuples (): Array<Array<number>> {
+      const choices = this.$store.state.numberSeries
+      return choices.filter((pair: Array<number>) => pair[0] + pair[1] >= this.resultMin && pair[0] + pair[1] <= this.resultMax)
     }
   },
   components: {
@@ -32,7 +38,8 @@ export default defineComponent({
     </div>
     <div class="container">
       <div class="row questions-row" v-for="r in 12" :key="r">
-        <SingleQuestion v-for="i in 4" :key="i" :left-value="typedPairs[(r * 4 + i) % typedPairs.length][0]" :right-value="typedPairs[(r * 4 + i) % typedPairs.length][1]" operation="+"></SingleQuestion>
+        <SingleQuestion v-for="i in 4" :key="i" :left-value="tuples[(r * 4 + i) % tuples.length][0]"
+                        :right-value="tuples[(r * 4 + i) % tuples.length][1]" operation="+"></SingleQuestion>
       </div>
     </div>
   </div>
@@ -42,6 +49,7 @@ export default defineComponent({
 #student-info {
   border-bottom: 1px solid #e4803e;
 }
+
 .questions-row {
   margin: 32px 0;
 }

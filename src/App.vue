@@ -32,14 +32,14 @@
             <input :value="max" @input="updateMax" class="form-control me-2 col-1" id="input-max-value"
                    name="input-max-value" type="number" aria-label="最大值">
           </div>
-          <button class="btn btn-outline-success" type="submit" @click.prevent="regenerate()">生成</button>
+          <button class="btn btn-outline-success" type="submit" @click.prevent="shuffle">生成</button>
         </form>
       </div>
     </div>
   </nav>
   <div class="container-fluid d-flex align-items-center justify-content-center">
     <div id="main-page" class="shadow-lg rounded">
-      <PlusExercise title="填空练习题" :pairs="pairs"></PlusExercise>
+      <PlusExercise title="填空练习题"></PlusExercise>
     </div>
   </div>
 </template>
@@ -50,18 +50,13 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import PlusExercise from '@/components/PlusExercise.vue'
 import { mapState } from 'vuex'
-import { MAX, MIN, OPERATION, RESULT_MAX, RESULT_MIN } from '@/store/mutations'
+import { MAX, MIN, OPERATION, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
 import { Operations } from '@/utils'
 
 export default defineComponent({
   name: 'App',
   components: {
     PlusExercise
-  },
-  data () {
-    return {
-      pairs: this.generate(this.$store.state.min, this.$store.state.max)
-    }
   },
   computed: mapState([
     'min',
@@ -85,30 +80,8 @@ export default defineComponent({
     updateOperation (e: any) {
       this.$store.commit(OPERATION, Operations[e.target.value as keyof typeof Operations])
     },
-    generate (min: number, max: number): Array<Array<number>> {
-      const permutations: Array<Array<number>> = []
-      for (let i = min; i <= max; i++) {
-        for (let j = min; j <= max; j++) {
-          if (i + j < min || i + j > max) {
-            continue
-          }
-          permutations.push([i, j])
-        }
-      }
-
-      for (let i = 0; i < permutations.length; i++) {
-        const index = i + Math.floor(Math.random() * (permutations.length - i))
-        const temp = permutations[i]
-        permutations[i] = permutations[index]
-        permutations[index] = temp
-      }
-
-      return permutations
-    },
-
-    regenerate () {
-      this.pairs.length = 0
-      this.pairs.push(...this.generate(this.min, this.max))
+    shuffle () {
+      this.$store.commit(SHUFFLE)
     }
   }
 })
