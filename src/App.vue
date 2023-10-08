@@ -14,14 +14,15 @@
           <div class="input-group">
             <label class="input-group-text" for="input-min-value">最小值</label>
             <input :value="min" @input="updateMin" class="form-control me-2 col-1" id="input-min-value"
-                   name="input-min-value" type="number" aria-label="最小值">
+                   name="input-min-value" type="number" min="0" max="100" aria-label="最小值">
           </div>
           <div class="input-group">
             <label class="input-group-text" for="input-max-value">最大值</label>
             <input :value="max" @input="updateMax" class="form-control me-2 col-1" id="input-max-value"
-                   name="input-max-value" type="number" aria-label="最大值">
+                   name="input-max-value" type="number" min="0" max="100" aria-label="最大值">
           </div>
-          <button class="btn btn-outline-success" type="submit" @click.prevent="shuffle">生成</button>
+          <button class="btn btn-outline-success" @click.prevent="shuffle">生成</button>
+          <button class="btn btn-outline-success ms-2" @click.prevent="print">打印</button>
         </form>
       </div>
     </div>
@@ -29,8 +30,9 @@
   <div class="container-fluid d-flex align-items-center justify-content-center">
     <div id="main-page" class="shadow-lg rounded">
       <div class="container">
+        <div class="mt-5"></div>
         <h2 class="text-center m-4">{{ operationName }}练习题</h2>
-        <div id="student-info" class="row mt-4 mb-4 ms-1 me-1">
+        <div id="student-info" class="row my-4 mx-1 px-2">
           <div class="col-2">姓名：</div>
           <div class="col-6"></div>
           <div class="col-4 text-end">&emsp;&emsp;年&emsp;&emsp;月&emsp;&emsp;日</div>
@@ -89,6 +91,9 @@ export default defineComponent({
     },
     shuffle () {
       this.$store.commit(SHUFFLE)
+    },
+    print () {
+      window.print()
     }
   }
 })
