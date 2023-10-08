@@ -2,7 +2,8 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary d-print-none" id="main-nav">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">练习题生成器</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -23,11 +24,13 @@
         <form class="d-flex" role="form" id="config">
           <div class="input-group">
             <label class="input-group-text" for="input-min-value">最小值</label>
-            <input v-model="minValue" class="form-control me-2 col-1" id="input-min-value" name="input-min-value" type="number" aria-label="最小值">
+            <input :value="min" @input="updateMin" class="form-control me-2 col-1" id="input-min-value"
+                   name="input-min-value" type="number" aria-label="最小值">
           </div>
           <div class="input-group">
             <label class="input-group-text" for="input-max-value">最大值</label>
-            <input v-model="maxValue" class="form-control me-2 col-1" id="input-max-value" name="input-max-value" type="number" aria-label="最大值">
+            <input :value="max" @input="updateMax" class="form-control me-2 col-1" id="input-max-value"
+                   name="input-max-value" type="number" aria-label="最大值">
           </div>
           <button class="btn btn-outline-success" type="submit" @click.prevent="regenerate()">生成</button>
         </form>
@@ -46,6 +49,9 @@ import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import PlusExercise from '@/components/PlusExercise.vue'
+import { mapState } from 'vuex'
+import { MAX, MIN, OPERATION, RESULT_MAX, RESULT_MIN } from '@/store/mutations'
+import { Operations } from '@/utils'
 
 export default defineComponent({
   name: 'App',
@@ -54,12 +60,31 @@ export default defineComponent({
   },
   data () {
     return {
-      minValue: 1,
-      maxValue: 20,
-      pairs: this.generate(1, 20)
+      pairs: this.generate(this.$store.state.min, this.$store.state.max)
     }
   },
+  computed: mapState([
+    'min',
+    'max',
+    'resultMin',
+    'resultMax'
+  ]),
   methods: {
+    updateMin (e: any) {
+      this.$store.commit(MIN, parseInt(e.target.value))
+    },
+    updateMax (e: any) {
+      this.$store.commit(MAX, parseInt(e.target.value))
+    },
+    updateResultMin (e: any) {
+      this.$store.commit(RESULT_MIN, parseInt(e.target.value))
+    },
+    updateResultMax (e: any) {
+      this.$store.commit(RESULT_MAX, parseInt(e.target.value))
+    },
+    updateOperation (e: any) {
+      this.$store.commit(OPERATION, Operations[e.target.value as keyof typeof Operations])
+    },
     generate (min: number, max: number): Array<Array<number>> {
       const permutations: Array<Array<number>> = []
       for (let i = min; i <= max; i++) {
@@ -83,7 +108,7 @@ export default defineComponent({
 
     regenerate () {
       this.pairs.length = 0
-      this.pairs.push(...this.generate(this.minValue, this.maxValue))
+      this.pairs.push(...this.generate(this.min, this.max))
     }
   }
 })
