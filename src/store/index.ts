@@ -13,9 +13,6 @@ function permute (min: number, max: number): Array<Array<number>> {
   const permutations: Array<Array<number>> = []
   for (let i = min; i <= max; i++) {
     for (let j = min; j <= max; j++) {
-      if (i + j < min || i + j > max) {
-        continue
-      }
       permutations.push([i, j])
     }
   }
