@@ -37,7 +37,7 @@
   </nav>
   <div class="container-fluid d-flex align-items-center justify-content-center">
     <div id="main-page" class="shadow-lg rounded">
-
+      <PlusExercise title="填空练习题"></PlusExercise>
     </div>
   </div>
 </template>
@@ -46,10 +46,12 @@
 import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
+import PlusExercise from '@/components/PlusExercise.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
+    PlusExercise
   }
 })
 </script>
