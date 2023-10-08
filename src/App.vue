@@ -50,8 +50,15 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import PlusExercise from '@/components/PlusExercise.vue'
 import { mapState } from 'vuex'
-import { MAX, MIN, OPERATION, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
+import { MAX, MIN, OPERATION, SHUFFLE } from '@/store/mutations'
 import { Operations } from '@/utils'
+
+function safeParseInt (value: any): number | undefined {
+  try {
+    return parseInt(value)
+  } catch {
+  }
+}
 
 export default defineComponent({
   name: 'App',
@@ -60,22 +67,14 @@ export default defineComponent({
   },
   computed: mapState([
     'min',
-    'max',
-    'resultMin',
-    'resultMax'
+    'max'
   ]),
   methods: {
     updateMin (e: any) {
-      this.$store.commit(MIN, parseInt(e.target.value))
+      this.$store.commit(MIN, safeParseInt(e.target.value))
     },
     updateMax (e: any) {
-      this.$store.commit(MAX, parseInt(e.target.value))
-    },
-    updateResultMin (e: any) {
-      this.$store.commit(RESULT_MIN, parseInt(e.target.value))
-    },
-    updateResultMax (e: any) {
-      this.$store.commit(RESULT_MAX, parseInt(e.target.value))
+      this.$store.commit(MAX, safeParseInt(e.target.value))
     },
     updateOperation (e: any) {
       this.$store.commit(OPERATION, Operations[e.target.value as keyof typeof Operations])
