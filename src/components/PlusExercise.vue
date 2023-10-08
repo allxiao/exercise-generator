@@ -24,7 +24,7 @@ export default defineComponent({
     </div>
     <div class="container">
       <div class="row questions-row" v-for="r in 12" :key="r">
-        <SingleQuestion v-for="i in 4" :key="i"></SingleQuestion>
+        <SingleQuestion v-for="i in 4" :key="i" left-value="7" right-value="5" operation="+"></SingleQuestion>
       </div>
     </div>
   </div>
