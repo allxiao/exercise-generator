@@ -23,20 +23,20 @@
         <form class="d-flex" role="form" id="config">
           <div class="input-group">
             <label class="input-group-text" for="input-min-value">最小值</label>
-            <input class="form-control me-2 col-1" id="input-min-value" name="input-min-value" type="number" aria-label="最小值">
+            <input v-model="minValue" class="form-control me-2 col-1" id="input-min-value" name="input-min-value" type="number" aria-label="最小值">
           </div>
           <div class="input-group">
             <label class="input-group-text" for="input-max-value">最大值</label>
-            <input class="form-control me-2 col-1" id="input-max-value" name="input-max-value" type="number" aria-label="最大值">
+            <input v-model="maxValue" class="form-control me-2 col-1" id="input-max-value" name="input-max-value" type="number" aria-label="最大值">
           </div>
-          <button class="btn btn-outline-success" type="submit">生成</button>
+          <button class="btn btn-outline-success" type="submit" @click.prevent="regenerate()">生成</button>
         </form>
       </div>
     </div>
   </nav>
   <div class="container-fluid d-flex align-items-center justify-content-center">
     <div id="main-page" class="shadow-lg rounded">
-      <PlusExercise title="填空练习题"></PlusExercise>
+      <PlusExercise title="填空练习题" :pairs="pairs"></PlusExercise>
     </div>
   </div>
 </template>
@@ -51,6 +51,40 @@ export default defineComponent({
   name: 'App',
   components: {
     PlusExercise
+  },
+  data () {
+    return {
+      minValue: 1,
+      maxValue: 20,
+      pairs: this.generate(1, 20)
+    }
+  },
+  methods: {
+    generate (min: number, max: number): Array<Array<number>> {
+      const permutations: Array<Array<number>> = []
+      for (let i = min; i <= max; i++) {
+        for (let j = min; j <= max; j++) {
+          if (i + j < min || i + j > max) {
+            continue
+          }
+          permutations.push([i, j])
+        }
+      }
+
+      for (let i = 0; i < permutations.length; i++) {
+        const index = i + Math.floor(Math.random() * (permutations.length - i))
+        const temp = permutations[i]
+        permutations[i] = permutations[index]
+        permutations[index] = temp
+      }
+
+      return permutations
+    },
+
+    regenerate () {
+      this.pairs.length = 0
+      this.pairs.push(...this.generate(this.minValue, this.maxValue))
+    }
   }
 })
 </script>
