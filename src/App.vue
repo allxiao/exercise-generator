@@ -23,7 +23,8 @@
           </div>
           <div class="input-group">
             <label class="input-group-text" for="input-result-max-value">结果上限</label>
-            <input :value="resultMax" @input="updateResultMax" class="form-control me-2 col-1" id="input-result-max-value"
+            <input :value="resultMax" @input="updateResultMax" class="form-control me-2 col-1"
+                   id="input-result-max-value"
                    name="input-result-max-value" type="number" aria-label="最大值">
           </div>
           <button class="btn btn-outline-success" @click.prevent="shuffle">生成</button>
@@ -60,7 +61,7 @@ import { Operations } from '@/utils'
 import NavItem from '@/components/NavItem.vue'
 import ExerciseGrid from '@/components/ExerciseGrid.vue'
 
-function safeParseInt (value: string): number | undefined {
+function safeParseInt(value: string): number | undefined {
   try {
     const result = parseInt(value)
     if (isNaN(result) || !isFinite(result)) {
@@ -77,7 +78,7 @@ export default defineComponent({
     NavItem,
     ExerciseGrid
   },
-  data () {
+  data() {
     return {
       operations: Object.keys(Operations)
     }
@@ -93,19 +94,19 @@ export default defineComponent({
     ])
   },
   methods: {
-    updateMin (e: { target: {value: string} }) {
+    updateMin(e: { target: { value: string } }) {
       this.$store.commit(MIN, safeParseInt(e.target.value))
     },
-    updateMax (e: { target: {value: string} }) {
+    updateMax(e: { target: { value: string } }) {
       this.$store.commit(MAX, safeParseInt(e.target.value))
     },
-    updateResultMax (e: {target: {value: string}}) {
+    updateResultMax(e: { target: { value: string } }) {
       this.$store.commit(RESULT_MAX, safeParseInt(e.target.value))
     },
-    shuffle () {
+    shuffle() {
       this.$store.commit(SHUFFLE)
     },
-    print () {
+    print() {
       window.print()
     }
   }

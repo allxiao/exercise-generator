@@ -20,7 +20,7 @@ export default defineComponent({
       'resultMax',
       'operation'
     ]),
-    opSymbol (): string {
+    opSymbol(): string {
       switch (this.operation) {
         case Operations.Plus:
           return '＋'
@@ -34,13 +34,13 @@ export default defineComponent({
           return ''
       }
     },
-    tuples (): Array<Array<number>> {
+    tuples(): Array<Array<number>> {
       const choices = this.$store.state.numberSeries
       return choices.filter(this.validPair)
     }
   },
   methods: {
-    validPair (pair: Array<number>): boolean {
+    validPair(pair: Array<number>): boolean {
       let value: number
       switch (this.operation) {
         case Operations.Plus:
@@ -59,7 +59,7 @@ export default defineComponent({
           return false
       }
     },
-    inScope (value: number): boolean {
+    inScope(value: number): boolean {
       if (this.resultMax === undefined) {
         return true
       }

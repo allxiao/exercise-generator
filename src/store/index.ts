@@ -10,7 +10,7 @@ export interface State {
   numberSeries: Array<Array<number>>
 }
 
-function permute (min: number, max: number): Array<Array<number>> {
+function permute(min: number, max: number): Array<Array<number>> {
   const permutations: Array<Array<number>> = []
   for (let i = min; i <= max; i++) {
     for (let j = min; j <= max; j++) {
@@ -21,7 +21,7 @@ function permute (min: number, max: number): Array<Array<number>> {
   return shuffle(permutations)
 }
 
-function shuffle<T> (choices: Array<T>): Array<T> {
+function shuffle<T>(choices: Array<T>): Array<T> {
   for (let i = 0; i < choices.length; i++) {
     const index = i + Math.floor(Math.random() * (choices.length - i))
     const temp = choices[i]
@@ -31,7 +31,7 @@ function shuffle<T> (choices: Array<T>): Array<T> {
   return choices
 }
 
-function updateNumberSeries (state: State) {
+function updateNumberSeries(state: State) {
   if (state.min !== undefined && state.max !== undefined) {
     state.numberSeries.splice(0, state.numberSeries.length, ...permute(state.min, state.max))
   } else {
@@ -40,7 +40,7 @@ function updateNumberSeries (state: State) {
 }
 
 export default createStore<State>({
-  state () {
+  state() {
     return {
       min: 1,
       max: 20,
@@ -50,32 +50,32 @@ export default createStore<State>({
     }
   },
   getters: {
-    operationName (state): string {
+    operationName(state): string {
       return state.operation as string
     }
   },
   mutations: {
-    [MIN] (state, n: number) {
+    [MIN](state, n: number) {
       if (state.min !== n) {
         state.min = n
         updateNumberSeries(state)
       }
     },
-    [MAX] (state, n: number) {
+    [MAX](state, n: number) {
       if (state.max !== n) {
         state.max = n
         updateNumberSeries(state)
       }
     },
-    [RESULT_MAX] (state, n: number) {
+    [RESULT_MAX](state, n: number) {
       if (state.resultMax !== n) {
         state.resultMax = n
       }
     },
-    [OPERATION] (state, op: Operations) {
+    [OPERATION](state, op: Operations) {
       state.operation = op
     },
-    [SHUFFLE] (state) {
+    [SHUFFLE](state) {
       updateNumberSeries(state)
     }
   }

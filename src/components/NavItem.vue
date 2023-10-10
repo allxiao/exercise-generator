@@ -9,15 +9,15 @@ export default defineComponent({
     op: String
   },
   computed: {
-    operation (): string {
+    operation(): string {
       return Operations[this.op as keyof typeof Operations]
     },
-    active () {
+    active() {
       return this.$store.state.operation === this.operation
     }
   },
   methods: {
-    updatePage () {
+    updatePage() {
       this.$store.commit(OPERATION, this.operation)
     }
   }
