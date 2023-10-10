@@ -22,10 +22,14 @@
                    name="input-max-value" type="number" min="0" max="100" aria-label="最大值">
           </div>
           <div class="input-group">
+            <label class="input-group-text" for="input-result-min-value">结果下限</label>
+            <input :value="resultMin" @input="updateResultMin" class="form-control me-2 col-1"
+                   id="input-result-min-value" name="input-result-min-value" type="number" aria-label="结果下限">
+          </div>
+          <div class="input-group">
             <label class="input-group-text" for="input-result-max-value">结果上限</label>
             <input :value="resultMax" @input="updateResultMax" class="form-control me-2 col-1"
-                   id="input-result-max-value"
-                   name="input-result-max-value" type="number" aria-label="最大值">
+                   id="input-result-max-value" name="input-result-max-value" type="number" aria-label="结果上限">
           </div>
           <button class="btn btn-outline-success" @click.prevent="shuffle">生成</button>
           <button class="btn btn-outline-success ms-2" @click.prevent="print">打印</button>
@@ -55,7 +59,7 @@ import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import { mapGetters, mapState } from 'vuex'
-import { MAX, MIN, RESULT_MAX, SHUFFLE } from '@/store/mutations'
+import { MAX, MIN, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
 import { Operations } from '@/utils'
 
 import NavItem from '@/components/NavItem.vue'
@@ -87,6 +91,7 @@ export default defineComponent({
     ...mapState([
       'min',
       'max',
+      'resultMin',
       'resultMax'
     ]),
     ...mapGetters([
@@ -99,6 +104,9 @@ export default defineComponent({
     },
     updateMax(e: { target: { value: string } }) {
       this.$store.commit(MAX, safeParseInt(e.target.value))
+    },
+    updateResultMin(e: { target: { value: string } }) {
+      this.$store.commit(RESULT_MIN, safeParseInt(e.target.value))
     },
     updateResultMax(e: { target: { value: string } }) {
       this.$store.commit(RESULT_MAX, safeParseInt(e.target.value))
@@ -114,6 +122,7 @@ export default defineComponent({
 </script>
 
 <style>
+/*noinspection CssUnusedSymbol*/
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -134,7 +143,7 @@ export default defineComponent({
 }
 
 #config button {
-  width: 10em;
+  width: 12em;
 }
 
 #student-info {

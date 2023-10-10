@@ -17,6 +17,7 @@ export default defineComponent({
     ...mapState([
       'min',
       'max',
+      'resultMin',
       'resultMax',
       'operation'
     ]),
@@ -63,7 +64,7 @@ export default defineComponent({
       if (this.resultMax === undefined) {
         return true
       }
-      return value >= this.min && value <= this.resultMax
+      return value >= this.resultMin && value <= this.resultMax
     }
   },
   components: {
@@ -74,8 +75,8 @@ export default defineComponent({
 
 <template>
   <div class="container" v-if="tuples.length > 0">
-    <div class="row questions-row" v-for="(_, r) in 12" :key="r">
-      <SingleQuestion v-for="(_, i) in 4" :key="i" :left-value="tuples[(r * 4 + i) % tuples.length][0]"
+    <div class="row questions-row" v-for="(ignore, r) in 12" :key="r">
+      <SingleQuestion v-for="(ignore, i) in 4" :key="i" :left-value="tuples[(r * 4 + i) % tuples.length][0]"
                       :right-value="tuples[(r * 4 + i) % tuples.length][1]" :operation="opSymbol"></SingleQuestion>
     </div>
   </div>

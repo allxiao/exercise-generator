@@ -1,5 +1,6 @@
 export const MIN = 'MIN'
 export const MAX = 'MAX'
+export const RESULT_MIN = 'RESULT_MIN'
 export const RESULT_MAX = 'RESULT_MAX'
 export const OPERATION = 'OPERATION'
 export const SHUFFLE = 'SHUFFLE'
