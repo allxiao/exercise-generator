@@ -1,10 +1,11 @@
 import { createStore } from 'vuex'
 import { Operations } from '@/utils'
-import { MAX, MIN, OPERATION, SHUFFLE } from '@/store/mutations'
+import { MAX, MIN, OPERATION, RESULT_MAX, SHUFFLE } from '@/store/mutations'
 
 export interface State {
   min: number,
   max: number,
+  resultMax: number | undefined,
   operation: Operations,
   numberSeries: Array<Array<number>>
 }
@@ -43,6 +44,7 @@ export default createStore<State>({
     return {
       min: 1,
       max: 20,
+      resultMax: undefined,
       operation: Operations.Plus,
       numberSeries: permute(1, 20)
     }
@@ -63,6 +65,11 @@ export default createStore<State>({
       if (state.max !== n) {
         state.max = n
         updateNumberSeries(state)
+      }
+    },
+    [RESULT_MAX] (state, n: number) {
+      if (state.resultMax !== n) {
+        state.resultMax = n
       }
     },
     [OPERATION] (state, op: Operations) {

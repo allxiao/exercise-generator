@@ -17,6 +17,7 @@ export default defineComponent({
     ...mapState([
       'min',
       'max',
+      'resultMax',
       'operation'
     ]),
     opSymbol (): string {
@@ -59,7 +60,10 @@ export default defineComponent({
       }
     },
     inScope (value: number): boolean {
-      return value >= this.min && value <= this.max
+      if (this.resultMax === undefined) {
+        return true
+      }
+      return value >= this.min && value <= this.resultMax
     }
   },
   components: {
@@ -70,8 +74,8 @@ export default defineComponent({
 
 <template>
   <div class="container" v-if="tuples.length > 0">
-    <div class="row questions-row" v-for="r in 12" :key="r">
-      <SingleQuestion v-for="i in 4" :key="i" :left-value="tuples[(r * 4 + i) % tuples.length][0]"
+    <div class="row questions-row" v-for="(_, r) in 12" :key="r">
+      <SingleQuestion v-for="(_, i) in 4" :key="i" :left-value="tuples[(r * 4 + i) % tuples.length][0]"
                       :right-value="tuples[(r * 4 + i) % tuples.length][1]" :operation="opSymbol"></SingleQuestion>
     </div>
   </div>

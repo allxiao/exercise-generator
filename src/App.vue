@@ -10,7 +10,7 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <NavItem v-for="op in operations" :op="op" :key="op"/>
         </ul>
-        <form class="d-flex" role="form" id="config">
+        <form class="d-flex ms-auto" role="form" id="config">
           <div class="input-group">
             <label class="input-group-text" for="input-min-value">最小值</label>
             <input :value="min" @input="updateMin" class="form-control me-2 col-1" id="input-min-value"
@@ -20,6 +20,11 @@
             <label class="input-group-text" for="input-max-value">最大值</label>
             <input :value="max" @input="updateMax" class="form-control me-2 col-1" id="input-max-value"
                    name="input-max-value" type="number" min="0" max="100" aria-label="最大值">
+          </div>
+          <div class="input-group">
+            <label class="input-group-text" for="input-result-max-value">结果上限</label>
+            <input :value="resultMax" @input="updateResultMax" class="form-control me-2 col-1" id="input-result-max-value"
+                   name="input-result-max-value" type="number" aria-label="最大值">
           </div>
           <button class="btn btn-outline-success" @click.prevent="shuffle">生成</button>
           <button class="btn btn-outline-success ms-2" @click.prevent="print">打印</button>
@@ -49,7 +54,7 @@ import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import { mapGetters, mapState } from 'vuex'
-import { MAX, MIN, SHUFFLE } from '@/store/mutations'
+import { MAX, MIN, RESULT_MAX, SHUFFLE } from '@/store/mutations'
 import { Operations } from '@/utils'
 
 import NavItem from '@/components/NavItem.vue'
@@ -57,7 +62,11 @@ import ExerciseGrid from '@/components/ExerciseGrid.vue'
 
 function safeParseInt (value: string): number | undefined {
   try {
-    return parseInt(value)
+    const result = parseInt(value)
+    if (isNaN(result) || !isFinite(result)) {
+      return undefined
+    }
+    return result
   } catch {
   }
 }
@@ -76,7 +85,8 @@ export default defineComponent({
   computed: {
     ...mapState([
       'min',
-      'max'
+      'max',
+      'resultMax'
     ]),
     ...mapGetters([
       'operationName'
@@ -88,6 +98,9 @@ export default defineComponent({
     },
     updateMax (e: { target: {value: string} }) {
       this.$store.commit(MAX, safeParseInt(e.target.value))
+    },
+    updateResultMax (e: {target: {value: string}}) {
+      this.$store.commit(RESULT_MAX, safeParseInt(e.target.value))
     },
     shuffle () {
       this.$store.commit(SHUFFLE)
@@ -116,11 +129,11 @@ export default defineComponent({
 }
 
 #config input {
-  width: 6em;
+  width: 1em;
 }
 
 #config button {
-  width: 8em;
+  width: 10em;
 }
 
 #student-info {
