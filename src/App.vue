@@ -8,7 +8,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <NavItem v-for="op in operations" :op="op" :key="op"/>
+          <NavItem v-for="op in operations" :op="op.type" :key="op"/>
         </ul>
         <form class="d-flex ms-auto" role="form" id="config">
           <div class="input-group">
@@ -60,10 +60,10 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import { mapGetters, mapState } from 'vuex'
 import { MAX, MIN, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
-import { Operations } from '@/utils'
 
 import NavItem from '@/components/NavItem.vue'
 import ExerciseGrid from '@/components/ExerciseGrid.vue'
+import { ALL_OPERATIONS } from '@/store/operations'
 
 function safeParseInt(value: string): number | undefined {
   try {
@@ -84,7 +84,7 @@ export default defineComponent({
   },
   data() {
     return {
-      operations: Object.keys(Operations)
+      operations: ALL_OPERATIONS
     }
   },
   computed: {

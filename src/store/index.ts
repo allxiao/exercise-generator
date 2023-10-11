@@ -1,13 +1,13 @@
 import { createStore } from 'vuex'
-import { Operations } from '@/utils'
-import { MAX, MIN, OPERATION, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
+import * as mutations from '@/store/mutations'
+import { fromOperationType, Operation, Operations, OperationType } from '@/store/operations'
 
 export interface State {
   min: number,
   max: number,
   resultMin: number,
   resultMax: number | undefined,
-  operation: Operations,
+  operation: Operation,
   numberSeries: Array<Array<number>>
 }
 
@@ -53,23 +53,23 @@ export default createStore<State>({
   },
   getters: {
     operationName(state): string {
-      return state.operation as string
+      return state.operation.representation
     }
   },
   mutations: {
-    [MIN](state, n: number) {
+    [mutations.MIN](state, n: number) {
       if (state.min !== n) {
         state.min = n
         updateNumberSeries(state)
       }
     },
-    [MAX](state, n: number) {
+    [mutations.MAX](state, n: number) {
       if (state.max !== n) {
         state.max = n
         updateNumberSeries(state)
       }
     },
-    [RESULT_MIN](state, n: number) {
+    [mutations.RESULT_MIN](state, n: number) {
       if (n === undefined) {
         n = 0
       }
@@ -77,15 +77,19 @@ export default createStore<State>({
         state.resultMin = n
       }
     },
-    [RESULT_MAX](state, n: number) {
+    [mutations.RESULT_MAX](state, n: number) {
       if (state.resultMax !== n) {
         state.resultMax = n
       }
     },
-    [OPERATION](state, op: Operations) {
-      state.operation = op
+    [mutations.OPERATION](state, op: OperationType | Operation) {
+      if ((op as Operation).representation !== undefined) {
+        state.operation = op as Operation
+      } else {
+        state.operation = fromOperationType(op as OperationType)
+      }
     },
-    [SHUFFLE](state) {
+    [mutations.SHUFFLE](state) {
       updateNumberSeries(state)
     }
   }
