@@ -78,15 +78,16 @@ function updateNumberSeries(state: State) {
 
 export default createStore<State>({
   state() {
-    const op = OperationType.Plus
-    return {
+    const data: State = {
       min: 1,
       max: 20,
       resultMin: 0,
       resultMax: 100,
-      operation: op,
-      numberSeries: permute(1, 20, op, 0, 100)
+      operation: OperationType.Plus,
+      numberSeries: []
     }
+    data.numberSeries = permute(data.min, data.max, data.operation, data.resultMin, data.resultMax)
+    return data
   },
   getters: {
     operationName(state): string {

@@ -2,7 +2,6 @@
 import { defineComponent } from 'vue'
 
 import SingleQuestion from '@/components/SingleQuestion.vue'
-import { mapState } from 'vuex'
 import { Question } from '@/store'
 
 export default defineComponent({
@@ -14,13 +13,6 @@ export default defineComponent({
     }
   },
   computed: {
-    ...mapState([
-      'min',
-      'max',
-      'resultMin',
-      'resultMax',
-      'operation'
-    ]),
     questionTable(): Array<Array<Question>> {
       const table: Array<Array<Question>> = []
       const candidates = this.$store.state.numberSeries
