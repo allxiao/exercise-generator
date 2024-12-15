@@ -39,7 +39,7 @@ export default defineComponent({
 
 <style scoped>
 .question {
-  font-size: 30px;
+  font-size: 26px;
   color: #333333;
 }
 </style>

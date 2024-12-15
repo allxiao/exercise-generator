@@ -46,7 +46,7 @@
   </nav>
   <div class="container-fluid d-flex align-items-center justify-content-center">
     <div id="main-page" class="shadow-lg rounded">
-      <div class="container">
+      <div class="container" id="page-content-area">
         <div class="mt-5"></div>
         <h2 class="text-center m-4">{{ operationName }}练习题</h2>
         <div id="student-info" class="row my-4 mx-1 px-2">
@@ -169,6 +169,13 @@ export default defineComponent({
   padding-top: 8px;
   padding-bottom: 8px;
   margin-left: 15px;
+}
+
+@media screen {
+  #page-content-area {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
 }
 
 @media print {

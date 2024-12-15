@@ -18,7 +18,7 @@ export default defineComponent({
     questionTable(): Array<Array<Question>> {
       const table: Array<Array<Question>> = []
       const candidates = this.$store.state.numberSeries
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 14; i++) {
         const end = i * 4 + 4
         if (end <= candidates.length) {
           const row = candidates.slice(i * 4, i * 4 + 4)
@@ -49,6 +49,6 @@ export default defineComponent({
 <style scoped>
 
 .questions-row {
-  margin: 32px 0;
+  margin: 25px 0;
 }
 </style>
