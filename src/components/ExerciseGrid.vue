@@ -3,6 +3,7 @@ import { defineComponent } from 'vue'
 
 import SingleQuestion from '@/components/SingleQuestion.vue'
 import { Question } from '@/store'
+import { mapState } from 'vuex'
 
 export default defineComponent({
   name: 'ExerciseGrid',
@@ -13,6 +14,7 @@ export default defineComponent({
     }
   },
   computed: {
+    ...mapState(['randomQuestion']),
     questionTable(): Array<Array<Question>> {
       const table: Array<Array<Question>> = []
       const candidates = this.$store.state.numberSeries
@@ -37,7 +39,9 @@ export default defineComponent({
     <div class="row questions-row" v-for="row in questionTable" :key="row">
       <SingleQuestion v-for="cell in row" :key="cell" :left-value="cell.lhs"
                       :right-value="cell.rhs"
-                      :operation="cell.op.symbol"></SingleQuestion>
+                      :operation="cell.op.symbol"
+                      :result="cell.result()"
+                      :random-question="randomQuestion"></SingleQuestion>
     </div>
   </div>
 </template>

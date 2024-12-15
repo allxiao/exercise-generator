@@ -9,6 +9,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <NavItem v-for="op in operations" :op="op" :key="op"/>
+          <li class="nav-item">
+            <div class="form-check nav-checkbox-control">
+              <input type="checkbox" class="form-check-input me-2 col-1" id="input-mixed-question"
+                     name="mixed-question" aria-label="求任意值" v-model="randomQuestion">
+              <label class="form-check-label" for="input-mixed-question">求任意值</label>
+            </div>
+          </li>
         </ul>
         <form class="d-flex ms-auto" role="form" id="config">
           <div class="input-group">
@@ -59,7 +66,7 @@ import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import { mapGetters, mapState } from 'vuex'
-import { MAX, MIN, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
+import { MAX, MIN, RANDOM_QUESTION, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
 
 import NavItem from '@/components/NavItem.vue'
 import ExerciseGrid from '@/components/ExerciseGrid.vue'
@@ -96,7 +103,15 @@ export default defineComponent({
     ]),
     ...mapGetters([
       'operationName'
-    ])
+    ]),
+    randomQuestion: {
+      get(): boolean {
+        return this.$store.state.randomQuestion
+      },
+      set(value: boolean) {
+        this.$store.commit(RANDOM_QUESTION, value)
+      }
+    }
   },
   methods: {
     updateMin(e: { target: { value: string } }) {
@@ -148,6 +163,12 @@ export default defineComponent({
 
 #student-info {
   border-bottom: 1px solid #e4803e;
+}
+
+.nav-item .nav-checkbox-control {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-left: 15px;
 }
 
 @media print {

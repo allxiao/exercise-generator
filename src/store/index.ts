@@ -29,6 +29,10 @@ export class Question {
     }
     return true
   }
+
+  result(): number {
+    return this.op.calculate(this.lhs, this.rhs)
+  }
 }
 
 export interface State {
@@ -37,7 +41,8 @@ export interface State {
   resultMin: number,
   resultMax: number,
   operation: OperationType,
-  numberSeries: Array<Question>
+  numberSeries: Array<Question>,
+  randomQuestion: boolean
 }
 
 function permute(min: number, max: number, type: OperationType, resultMin: number, resultMax: number): Array<Question> {
@@ -69,7 +74,6 @@ function shuffle<T>(choices: Array<T>): Array<T> {
 function updateNumberSeries(state: State) {
   if (state.min !== undefined && state.max !== undefined) {
     const permuted = permute(state.min, state.max, state.operation, state.resultMin, state.resultMax)
-    console.log(permuted)
     state.numberSeries.splice(0, state.numberSeries.length, ...permuted)
   } else {
     state.numberSeries.length = 0
@@ -84,7 +88,8 @@ export default createStore<State>({
       resultMin: 0,
       resultMax: 100,
       operation: OperationType.Plus,
-      numberSeries: []
+      numberSeries: [],
+      randomQuestion: false
     }
     data.numberSeries = permute(data.min, data.max, data.operation, data.resultMin, data.resultMax)
     return data
@@ -133,6 +138,11 @@ export default createStore<State>({
     },
     [mutations.SHUFFLE](state) {
       updateNumberSeries(state)
+    },
+    [mutations.RANDOM_QUESTION](state, random: boolean) {
+      if (state.randomQuestion !== random) {
+        state.randomQuestion = random
+      }
     }
   }
 })

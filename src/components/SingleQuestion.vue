@@ -7,9 +7,19 @@ export default defineComponent({
   name: 'SingleQuestion',
   props: {
     leftValue: Number,
-    operation: String,
     rightValue: Number,
-    result: Number
+    operation: String,
+    result: Number,
+    randomQuestion: Boolean
+  },
+  computed: {
+    blankField() {
+      if (this.randomQuestion) {
+        return ['lhs', 'rhs', 'result'][Math.floor(Math.random() * 3)]
+      } else {
+        return 'result'
+      }
+    }
   },
   components: {
     SingleValue
@@ -19,11 +29,11 @@ export default defineComponent({
 
 <template>
   <div class="question col-3 d-flex">
-    <SingleValue :value="leftValue"></SingleValue>
+    <SingleValue :value="blankField === 'lhs' ? undefined : leftValue"></SingleValue>
     <div>{{ operation }}</div>
-    <SingleValue :value="rightValue"></SingleValue>
+    <SingleValue :value="blankField === 'rhs' ? undefined : rightValue"></SingleValue>
     <div>=</div>
-    <SingleValue :value="result"></SingleValue>
+    <SingleValue :value="blankField === 'result' ? undefined : result"></SingleValue>
   </div>
 </template>
 
