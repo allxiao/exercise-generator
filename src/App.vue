@@ -8,7 +8,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <NavItem v-for="op in operations" :op="op.type" :key="op"/>
+          <NavItem v-for="op in operations" :op="op" :key="op"/>
         </ul>
         <form class="d-flex ms-auto" role="form" id="config">
           <div class="input-group">

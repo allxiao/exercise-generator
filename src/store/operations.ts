@@ -1,61 +1,65 @@
 export enum OperationType {
-  Plus = 1,
-  Minus,
-  Multiply,
-  Divide
+  Plus = '加法',
+  Minus = '减法',
+  Multiply = '乘法',
+  Divide = '除法',
+  Mixed = '混合',
+}
+
+export class MathOperation {
+  readonly type: OperationType
+  readonly symbol: string
+
+  constructor(type: OperationType, symbol: string) {
+    this.type = type
+    this.symbol = symbol
+  }
 }
 
 export interface Operation {
   readonly type: OperationType
   readonly symbol: string
-  readonly representation: string
 
   calculate(lhs: number, rhs: number): number
 }
 
-export const ALL_OPERATIONS: Operation[] = []
-const __mapping: { [key in OperationType]?: Operation } = {}
-export function fromOperationType(type: OperationType): Operation {
-  return __mapping[type] ?? Plus
-}
+export const ALL_OPERATIONS: OperationType[] = [OperationType.Plus, OperationType.Minus, OperationType.Multiply, OperationType.Divide, OperationType.Mixed]
 
-function __defineOperation(op: Operation): Operation {
-  ALL_OPERATIONS.push(op)
-  __mapping[op.type] = op
-  return op
-}
+export class PlusOperation extends MathOperation implements Operation {
+  constructor() {
+    super(OperationType.Plus, '+')
+  }
 
-const Plus: Operation = __defineOperation({
-  type: OperationType.Plus,
-  symbol: '＋',
-  representation: '加法',
   calculate(lhs: number, rhs: number): number {
     return lhs + rhs
   }
-})
+}
 
-const Minus: Operation = __defineOperation({
-  type: OperationType.Minus,
-  symbol: '－',
-  representation: '减法',
+export class MinusOperation extends MathOperation implements Operation {
+  constructor() {
+    super(OperationType.Minus, '-')
+  }
+
   calculate(lhs: number, rhs: number): number {
     return lhs - rhs
   }
-})
+}
 
-const Multiply: Operation = __defineOperation({
-  type: OperationType.Multiply,
-  symbol: '×',
-  representation: '乘法',
+export class MultiplyOperation extends MathOperation implements Operation {
+  constructor() {
+    super(OperationType.Multiply, '×')
+  }
+
   calculate(lhs: number, rhs: number): number {
     return lhs * rhs
   }
-})
+}
 
-const Divide: Operation = __defineOperation({
-  type: OperationType.Divide,
-  symbol: '÷',
-  representation: '除法',
+export class DivideOperation extends MathOperation implements Operation {
+  constructor() {
+    super(OperationType.Divide, '÷')
+  }
+
   calculate(lhs: number, rhs: number): number {
     const result = lhs / rhs
     if (!isFinite(result) || isNaN(result) || Math.floor(result) !== result) {
@@ -63,11 +67,26 @@ const Divide: Operation = __defineOperation({
     }
     return result
   }
-})
+}
 
-export const Operations = {
-  Plus,
-  Minus,
-  Multiply,
-  Divide
+export class MixedOperation extends MathOperation implements Operation {
+  readonly delegate: Operation
+
+  constructor() {
+    const d = new ([PlusOperation, MinusOperation][Math.floor(Math.random() * 2)])()
+    super(OperationType.Mixed, d.symbol)
+    this.delegate = d
+  }
+
+  calculate(lhs: number, rhs: number): number {
+    return this.delegate.calculate(lhs, rhs)
+  }
+}
+
+export const Operations: { [key:string]: { new(): Operation } } = {
+  [OperationType.Plus]: PlusOperation,
+  [OperationType.Minus]: MinusOperation,
+  [OperationType.Multiply]: MultiplyOperation,
+  [OperationType.Divide]: DivideOperation,
+  [OperationType.Mixed]: MixedOperation
 }

@@ -1,21 +1,55 @@
 import { createStore } from 'vuex'
 import * as mutations from '@/store/mutations'
-import { fromOperationType, Operation, Operations, OperationType } from '@/store/operations'
+import { Operation, Operations, OperationType } from '@/store/operations'
+
+export class Question {
+  readonly lhs: number
+  readonly rhs: number
+  readonly op: Operation
+
+  constructor(lhs: number, rhs: number, op: Operation) {
+    this.lhs = lhs
+    this.rhs = rhs
+    this.op = op
+  }
+
+  inScope(min: number, max: number, resultMin: number, resultMax: number): boolean {
+    if (this.lhs < min || this.lhs > max) {
+      return false
+    }
+    if (this.rhs < min || this.rhs > max) {
+      return false
+    }
+    const result = this.op.calculate(this.lhs, this.rhs)
+    if (isNaN(result) || !isFinite(result) || Math.floor(result) !== result) {
+      return false
+    }
+    if (result < resultMin || result > resultMax) {
+      return false
+    }
+    return true
+  }
+}
 
 export interface State {
   min: number,
   max: number,
   resultMin: number,
-  resultMax: number | undefined,
-  operation: Operation,
-  numberSeries: Array<Array<number>>
+  resultMax: number,
+  operation: OperationType,
+  numberSeries: Array<Question>
 }
 
-function permute(min: number, max: number): Array<Array<number>> {
-  const permutations: Array<Array<number>> = []
+function permute(min: number, max: number, type: OperationType, resultMin: number, resultMax: number): Array<Question> {
+  const permutations: Array<Question> = []
+  const op = Operations[type]
   for (let i = min; i <= max; i++) {
     for (let j = min; j <= max; j++) {
-      permutations.push([i, j])
+      // eslint-disable-next-line new-cap
+      const question = new Question(i, j, new op())
+      if (question.inScope(min, max, resultMin, resultMax)) {
+        permutations.push(question)
+      }
     }
   }
 
@@ -34,7 +68,9 @@ function shuffle<T>(choices: Array<T>): Array<T> {
 
 function updateNumberSeries(state: State) {
   if (state.min !== undefined && state.max !== undefined) {
-    state.numberSeries.splice(0, state.numberSeries.length, ...permute(state.min, state.max))
+    const permuted = permute(state.min, state.max, state.operation, state.resultMin, state.resultMax)
+    console.log(permuted)
+    state.numberSeries.splice(0, state.numberSeries.length, ...permuted)
   } else {
     state.numberSeries.length = 0
   }
@@ -42,18 +78,19 @@ function updateNumberSeries(state: State) {
 
 export default createStore<State>({
   state() {
+    const op = OperationType.Plus
     return {
       min: 1,
       max: 20,
       resultMin: 0,
-      resultMax: undefined,
-      operation: Operations.Plus,
-      numberSeries: permute(1, 20)
+      resultMax: 100,
+      operation: op,
+      numberSeries: permute(1, 20, op, 0, 100)
     }
   },
   getters: {
     operationName(state): string {
-      return state.operation.representation
+      return state.operation
     }
   },
   mutations: {
@@ -75,18 +112,22 @@ export default createStore<State>({
       }
       if (state.resultMin !== n) {
         state.resultMin = n
+        updateNumberSeries(state)
       }
     },
     [mutations.RESULT_MAX](state, n: number) {
+      if (n === undefined) {
+        n = 100
+      }
       if (state.resultMax !== n) {
         state.resultMax = n
+        updateNumberSeries(state)
       }
     },
-    [mutations.OPERATION](state, op: OperationType | Operation) {
-      if ((op as Operation).representation !== undefined) {
-        state.operation = op as Operation
-      } else {
-        state.operation = fromOperationType(op as OperationType)
+    [mutations.OPERATION](state, op: OperationType) {
+      if (state.operation !== op) {
+        state.operation = op
+        updateNumberSeries(state)
       }
     },
     [mutations.SHUFFLE](state) {
