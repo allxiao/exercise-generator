@@ -27,7 +27,7 @@ export const ALL_OPERATIONS: OperationType[] = [OperationType.Plus, OperationTyp
 
 export class PlusOperation extends MathOperation implements Operation {
   constructor() {
-    super(OperationType.Plus, '+')
+    super(OperationType.Plus, '＋')
   }
 
   calculate(lhs: number, rhs: number): number {
@@ -37,7 +37,7 @@ export class PlusOperation extends MathOperation implements Operation {
 
 export class MinusOperation extends MathOperation implements Operation {
   constructor() {
-    super(OperationType.Minus, '-')
+    super(OperationType.Minus, '－')
   }
 
   calculate(lhs: number, rhs: number): number {
