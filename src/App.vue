@@ -66,7 +66,7 @@ import { defineComponent } from 'vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import { mapGetters, mapState } from 'vuex'
-import { MAX, MIN, RANDOM_QUESTION, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
+import { INITIALIZE, MAX, MIN, RANDOM_QUESTION, RESULT_MAX, RESULT_MIN, SHUFFLE } from '@/store/mutations'
 
 import NavItem from '@/components/NavItem.vue'
 import ExerciseGrid from '@/components/ExerciseGrid.vue'
@@ -93,6 +93,9 @@ export default defineComponent({
     return {
       operations: ALL_OPERATIONS
     }
+  },
+  beforeCreate() {
+    this.$store.commit(INITIALIZE)
   },
   computed: {
     ...mapState([

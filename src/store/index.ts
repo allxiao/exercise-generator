@@ -33,6 +33,10 @@ export class Question {
   result(): number {
     return this.op.calculate(this.lhs, this.rhs)
   }
+
+  toString(): string {
+    return `${this.lhs} ${this.op.symbol} ${this.rhs} = ${this.result()}`
+  }
 }
 
 export interface State {
@@ -43,6 +47,18 @@ export interface State {
   operation: OperationType,
   numberSeries: Array<Question>,
   randomQuestion: boolean
+}
+
+export function toStoredData(state: State): State {
+  return {
+    min: state.min,
+    max: state.max,
+    resultMin: state.resultMin,
+    resultMax: state.resultMax,
+    operation: state.operation,
+    numberSeries: [],
+    randomQuestion: state.randomQuestion
+  }
 }
 
 function permute(min: number, max: number, type: OperationType, resultMin: number, resultMax: number): Array<Question> {
@@ -100,6 +116,13 @@ export default createStore<State>({
     }
   },
   mutations: {
+    [mutations.INITIALIZE](state) {
+      if (localStorage.getItem('store')) {
+        const stored = JSON.parse(localStorage.getItem('store') || '{}')
+        this.replaceState(Object.assign(state, stored))
+        updateNumberSeries(state)
+      }
+    },
     [mutations.MIN](state, n: number) {
       if (state.min !== n) {
         state.min = n

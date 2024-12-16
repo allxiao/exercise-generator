@@ -1,3 +1,4 @@
+export const INITIALIZE = 'INITIALIZE'
 export const MIN = 'MIN'
 export const MAX = 'MAX'
 export const RESULT_MIN = 'RESULT_MIN'
