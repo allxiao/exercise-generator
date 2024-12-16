@@ -124,48 +124,31 @@ export default createStore<State>({
       }
     },
     [mutations.MIN](state, n: number) {
-      if (state.min !== n) {
-        state.min = n
-        updateNumberSeries(state)
-      }
+      state.min = n
     },
     [mutations.MAX](state, n: number) {
-      if (state.max !== n) {
-        state.max = n
-        updateNumberSeries(state)
-      }
+      state.max = n
     },
     [mutations.RESULT_MIN](state, n: number) {
       if (n === undefined) {
         n = 0
       }
-      if (state.resultMin !== n) {
-        state.resultMin = n
-        updateNumberSeries(state)
-      }
+      state.resultMin = n
     },
     [mutations.RESULT_MAX](state, n: number) {
       if (n === undefined) {
         n = 100
       }
-      if (state.resultMax !== n) {
-        state.resultMax = n
-        updateNumberSeries(state)
-      }
+      state.resultMax = n
     },
     [mutations.OPERATION](state, op: OperationType) {
-      if (state.operation !== op) {
-        state.operation = op
-        updateNumberSeries(state)
-      }
+      state.operation = op
     },
-    [mutations.SHUFFLE](state) {
+    [mutations.SHUFFLE](state, mutation: string) {
       updateNumberSeries(state)
     },
     [mutations.RANDOM_QUESTION](state, random: boolean) {
-      if (state.randomQuestion !== random) {
-        state.randomQuestion = random
-      }
+      state.randomQuestion = random
     }
   }
 })
